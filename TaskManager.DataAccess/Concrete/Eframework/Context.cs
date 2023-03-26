@@ -13,7 +13,7 @@ namespace TaskManager.DataAccess.Concrete.Eframework
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-A5RCAJ3;Database=PitonTask;Trusted_Connection=True");
+            optionsBuilder.UseSqlServer(@"Server=DESKTOP-A5RCAJ3;Database=PitonTask;Trusted_Connection=True; TrustServerCertificate=true;");
         }
 
         public DbSet<User> Users { get; set; }

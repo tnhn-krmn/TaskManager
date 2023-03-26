@@ -10,5 +10,6 @@ namespace TaskManager.DataAccess.Abstract
 {
     public interface IUserDal : IEntityRepository<User>
     {
+        public User GetUserWithId(string email);
     }
 }
