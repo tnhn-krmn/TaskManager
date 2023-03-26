@@ -6,6 +6,7 @@ using TaskManager.Business.Abstract;
 using TaskManager.Business.Concrete;
 using TaskManager.Core.Settings;
 using TaskManager.DataAccess.Abstract;
+using TaskManager.DataAccess.Concrete;
 using TaskManager.DataAccess.Concrete.Eframework;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,10 @@ builder.Services.AddSwaggerGen();
 builder.Services
 .Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
 builder.Services.AddScoped<IJwtAuthenticationService, JwtAuthenticationManager>();
+builder.Services.AddScoped<IJobService, JobManager>();
 builder.Services.AddScoped<IUserDal, UserDal>();
+builder.Services.AddScoped<IJobDal, JobDal>();
+builder.Services.AddScoped<IRefreshTokenDal, RefreshTokenDal>();
 
 
 builder.Services.AddSwaggerGen(c =>

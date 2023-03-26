@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Business.Abstract;
+using TaskManager.DataAccess.Concrete.Eframework;
+using TaskManager.Entities.Concrete;
 using TaskManager.Entities.Dto;
 
 namespace TaskManager.API.Controllers
@@ -31,12 +33,24 @@ namespace TaskManager.API.Controllers
             return BadRequest();
         }
 
+        //[HttpPost]
+        //[Route("newRefresh-token")]
+        //public async Task<IActionResult> RenewTokens(NewRefreshToken refreshToken)
+        //{
+        //    var tokens =  await _jwtAuthenticationService.NewRefreshToken(refreshToken);
+        //    if (tokens == null)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    return Ok(tokens);
+        //}
+
         [HttpGet]
-        [Route("test-auth")]
+        [Route("test")]
         [Authorize]
         public IActionResult GetTest()
         {
-            return Ok("Only authenticated user can consume this endpoint");
+            return Ok("Success");
         }
     }
 }

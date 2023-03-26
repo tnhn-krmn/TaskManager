@@ -81,3 +81,4 @@ C:\Users\tunah\OneDrive\Masaüstü\TaskManager\TaskManager\TaskManager.API\obj\D
 C:\Users\tunah\OneDrive\Masaüstü\TaskManager\TaskManager\TaskManager.API\obj\Debug\net6.0\TaskManager.API.genruntimeconfig.cache
 C:\Users\tunah\OneDrive\Masaüstü\TaskManager\TaskManager\TaskManager.API\obj\Debug\net6.0\ref\TaskManager.API.dll
 C:\Users\tunah\OneDrive\Masaüstü\TaskManager\TaskManager\TaskManager.API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\tunah\OneDrive\Masaüstü\TaskManager\TaskManager\TaskManager.API\bin\Debug\net6.0\libman.json

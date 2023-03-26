@@ -19,5 +19,13 @@ namespace TaskManager.DataAccess.Concrete.Eframework
                 return context.Users.FirstOrDefault(x => x.Email == email);
             }
         }
+
+        public User GetUserToken(int userId)
+        {
+            using (var context = new Context())
+            {
+                return context.Users.Where(x => x.Id == userId).FirstOrDefault();
+            }
+        }
     }
 }

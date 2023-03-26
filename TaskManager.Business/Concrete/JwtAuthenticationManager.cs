@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManager.Business.Abstract;
@@ -19,11 +20,13 @@ namespace TaskManager.Business.Concrete
     {
         private readonly TokenSettings _tokenSettings;
         private readonly IUserDal _userDal;
+        private readonly IRefreshTokenDal _refreshTokenDal;
 
-        public JwtAuthenticationManager(IOptions<TokenSettings> tokenSettings, IUserDal userDal)
+        public JwtAuthenticationManager(IOptions<TokenSettings> tokenSettings, IUserDal userDal, IRefreshTokenDal refreshTokenDal)
         {
             _tokenSettings = tokenSettings.Value;
             _userDal = userDal;
+            _refreshTokenDal = refreshTokenDal;
         }
 
         public async Task<Token> GetToken(Login login)
@@ -32,15 +35,42 @@ namespace TaskManager.Business.Concrete
 
             if (user != null)
             {
+                var refreshToken = CreateRefreshToken();
                 var token = new Token
                 {
+                    RefreshToken = refreshToken,
                     AccessToken = CreateJwtToken(user),
+
                 };
+                await InsertRefreshToken(user.Id, refreshToken);
+
                 return token;
             }
 
             return null;
         }
+
+        //public async Task<Token> NewRefreshToken(RefreshToken refreshToken)
+        //{
+        //    var uRefreshToken = _refreshTokenDal.UserRefreshToken(refreshToken);
+        //    if (uRefreshToken != null)
+        //    {
+        //        var user = _userDal.GetUserToken(uRefreshToken);
+        //        var newTokenJwt = CreateJwtToken(user);
+        //        var newRefreshToken = CreateRefreshToken();
+
+        //        uRefreshToken.Token = newTokenJwt;
+        //        uRefreshToken.ExpirationDate = DateTime.Now.AddDays(10);
+        //        var newRefreshTokenSave = _refreshTokenDal.RefreshTokenSave(uRefreshToken);
+
+        //        return new Token
+        //        {
+        //            AccessToken = newTokenJwt,
+        //            RefreshToken = newRefreshToken
+        //        };
+        //    }
+        //    return null;
+        //}
 
         private string CreateJwtToken(User user)
         {
@@ -66,6 +96,32 @@ namespace TaskManager.Business.Concrete
 
             string token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
             return token;
+        }
+
+        private string CreateRefreshToken()
+        {
+            var tokenBytes = RandomNumberGenerator.GetBytes(64);
+            var refreshToken = Convert.ToBase64String(tokenBytes);
+
+            var IsToken = _refreshTokenDal.IsRefreshToken(refreshToken);
+
+            if (IsToken)
+            {
+                return CreateRefreshToken();
+            }
+            return refreshToken;
+        }
+
+        private async Task InsertRefreshToken(int userId, string refreshtoken)
+        {
+            var refreshToken = new RefreshToken
+            {
+                UserId = userId,
+                Token = refreshtoken,
+                ExpirationDate = DateTime.Now.AddDays(10)
+            };
+            _refreshTokenDal.RefreshTokenSave(refreshToken);
+
         }
     }
 }
